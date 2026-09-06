@@ -1,6 +1,13 @@
 "use client";
 
-import { MapPin, Phone, Send, Instagram, Facebook, Youtube } from "lucide-react";
+import {
+  MapPin,
+  Phone,
+  Send,
+  Instagram,
+  Facebook,
+  Youtube,
+} from "lucide-react";
 import { useTranslation } from "@/lib/i18n/useTranslation";
 import { AnimatedSection } from "@/components/ui/AnimatedSection";
 import { ContactForm } from "@/components/ContactForm";
@@ -11,10 +18,22 @@ const MAP_QUERY = "Farg'ona, Tadbirkorlar ko'chasi 167";
 // Ijtimoiy tarmoq havolalari. O'zingizning haqiqiy akkauntlaringiz
 // bilan almashtiring — struktura va ikonlarga tegish shart emas.
 const SOCIAL_LINKS = [
-  { name: "Instagram", href: "https://instagram.com/prohome", icon: Instagram },
+  {
+    name: "Instagram",
+    href: "https://www.instagram.com/prohome.uzb",
+    icon: Instagram,
+  },
   { name: "Telegram", href: "https://t.me/prohome_uz", icon: Send },
-  { name: "Facebook", href: "https://facebook.com/prohome", icon: Facebook },
-  { name: "YouTube", href: "https://youtube.com/@prohome", icon: Youtube },
+  {
+    name: "Facebook",
+    href: "https://www.facebook.com/zamonagency",
+    icon: Facebook,
+  },
+  {
+    name: "YouTube",
+    href: "https://www.youtube.com/@prohomeuz",
+    icon: Youtube,
+  },
 ];
 
 export function Contact() {
