@@ -4,9 +4,15 @@ import "./globals.css";
 import { Loader } from "@/components/Loader";
 
 export const metadata: Metadata = {
-  title: "PRO HOME — Qurilish sotuvini boshqarish tizimi",
+  title: "PRO HOME | Qurilish va sotuv platformasi",
   description:
     "Qurilish kompaniyangiz uchun sotuvni to'liq nazorat qiladigan professional platforma: CRM, call center integratsiyasi va rahbar uchun real vaqt dashboardi.",
+  applicationName: "PRO HOME",
+  icons: {
+    icon: "/images/Logo.jpg",
+    shortcut: "/images/Logo.jpg",
+    apple: "/images/Logo.jpg",
+  },
   robots: { index: true, follow: true },
 };
 

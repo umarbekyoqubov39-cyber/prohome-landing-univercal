@@ -55,7 +55,7 @@ export function Header() {
         "sticky top-0 z-50 w-full border-b transition-colors duration-300",
         isScrolled
           ? "border-border-subtle bg-base-950/85 backdrop-blur-md"
-          : "border-transparent bg-transparent"
+          : "border-transparent bg-transparent",
       )}
     >
       <div className="mx-auto flex max-w-content items-center justify-between px-5 py-4 md:px-8">
@@ -64,9 +64,11 @@ export function Header() {
           className="flex items-center gap-2.5"
           aria-label="PRO HOME — bosh sahifa"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-b from-brand-green to-brand-greenDark text-sm font-bold text-white">
-            P
-          </span>
+          <img
+            src="/images/Logo.jpg"
+            alt="PRO HOME"
+            className="h-9 w-9 rounded-lg object-cover"
+          />
           <span className="text-[15px] font-extrabold tracking-tight text-ink-primary">
             PRO HOME
           </span>
@@ -79,7 +81,7 @@ export function Header() {
               onClick={() => handleNavClick(item.id)}
               className={cn(
                 "text-[14px] font-medium text-ink-secondary transition-colors hover:text-ink-primary",
-                item.id === "home" && "text-brand-blue hover:text-brand-blue"
+                item.id === "home" && "text-brand-blue hover:text-brand-blue",
               )}
             >
               {item.label}
@@ -111,7 +113,7 @@ export function Header() {
                       aria-selected={locale === code}
                       className={cn(
                         "block w-full px-3.5 py-2 text-left text-[13px] font-medium text-ink-secondary transition-colors hover:bg-white/[0.06] hover:text-ink-primary",
-                        locale === code && "text-brand-blue"
+                        locale === code && "text-brand-blue",
                       )}
                     >
                       {localeLabels[code]}
@@ -136,7 +138,11 @@ export function Header() {
             onClick={() => setIsMenuOpen((v) => !v)}
             aria-label="Menyu"
           >
-            {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            {isMenuOpen ? (
+              <X className="h-4 w-4" />
+            ) : (
+              <Menu className="h-4 w-4" />
+            )}
           </button>
         </div>
       </div>
@@ -163,7 +169,7 @@ export function Header() {
                   "rounded-full border border-border-medium px-3 py-1.5 text-[12px] font-semibold",
                   locale === code
                     ? "border-brand-blue text-brand-blue"
-                    : "text-ink-secondary"
+                    : "text-ink-secondary",
                 )}
               >
                 {localeLabels[code]}
