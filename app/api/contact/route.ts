@@ -15,10 +15,20 @@ function getClientIp(request: NextRequest): string {
 export async function POST(request: NextRequest) {
   try {
     const ip = getClientIp(request);
+    const userAgent = request.headers.get("user-agent") ?? "unknown";
+    const source =
+      request.headers.get("referer") ??
+      request.headers.get("origin") ??
+      request.nextUrl.origin ??
+      "unknown";
+
     if (isRateLimited(ip)) {
       return NextResponse.json(
-        { success: false, message: "Too many requests. Please try again later." },
-        { status: 429 }
+        {
+          success: false,
+          message: "Too many requests. Please try again later.",
+        },
+        { status: 429 },
       );
     }
 
@@ -26,11 +36,14 @@ export async function POST(request: NextRequest) {
     if (!body || typeof body !== "object") {
       return NextResponse.json(
         { success: false, message: "Invalid request body" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    const { name, phone, company, website, locale } = body as Record<string, unknown>;
+    const { name, phone, company, website, locale } = body as Record<
+      string,
+      unknown
+    >;
 
     // Honeypot: agar bu maydon to'ldirilgan bo'lsa, so'rov bot tomonidan
     // yuborilgan deb hisoblanadi va jim ravishda "muvaffaqiyatli" javob beriladi.
@@ -48,13 +61,13 @@ export async function POST(request: NextRequest) {
         phone: typeof phone === "string" ? phone : "",
         company: typeof company === "string" ? company : "",
       },
-      safeLocale
+      safeLocale,
     );
 
     if (!result.valid) {
       return NextResponse.json(
         { success: false, message: "Validation failed", errors: result.errors },
-        { status: 422 }
+        { status: 422 },
       );
     }
 
@@ -62,14 +75,20 @@ export async function POST(request: NextRequest) {
       name: sanitizeText(name as string),
       phone: sanitizeText(phone as string),
       company: sanitizeText((company as string) ?? ""),
+      ip,
+      userAgent,
+      locale: safeLocale,
+      source,
     });
 
     return NextResponse.json({ success: true, message: "OK" });
   } catch (error) {
     console.error("[/api/contact]", error);
-    return NextResponse.json(
-      { success: false, message: "Internal error" },
-      { status: 500 }
-    );
+    const message =
+      error instanceof Error && error.message
+        ? error.message
+        : "Internal error";
+
+    return NextResponse.json({ success: false, message }, { status: 500 });
   }
 }

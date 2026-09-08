@@ -18,7 +18,8 @@ const en: typeof uz = {
     cta: "Free sales diagnostic",
   },
   problems: {
-    title: "The core problems of unsystematic sales in new construction projects",
+    title:
+      "The core problems of unsystematic sales in new construction projects",
     subtitle:
       "If your sales process isn't systematized, these problems show up in almost every project:",
     cards: [
@@ -85,8 +86,10 @@ const en: typeof uz = {
       "These problems don't appear overnight — they quietly erode your business before you even notice.",
   },
   calculator: {
-    title: "Do you know how much a small drop in conversion actually costs you?",
-    example: "Example: 1 unit averages 600M UZS. If conversion drops by just 5%:",
+    title:
+      "Do you know how much a small drop in conversion actually costs you?",
+    example:
+      "Example: 1 unit averages 600M UZS. If conversion drops by just 5%:",
     point1: "You lose 5 sales out of every 100 leads.",
     point2: "That's 5 × 600M = 3 billion UZS in lost revenue.",
     question: "Question: do you want a system to prevent this loss?",
@@ -114,6 +117,7 @@ const en: typeof uz = {
         icon: "users",
         badge: "CRM",
         title: "PRO HOME CRM",
+        url: "https://kotibam.uz/",
         points: [
           "Keep every lead tracked in the system without losing any",
           "Call center integration with monitoring of every call",
@@ -155,10 +159,34 @@ const en: typeof uz = {
     browserUrl: "app.prohome.uz/dashboard",
     chartTitle: "Monthly sales dynamics",
     metrics: [
-      { icon: "users", value: "247", label: "Clients", delta: "+12%", accent: "blue" },
-      { icon: "trendingUp", value: "23%", label: "Conversion", delta: "+5%", accent: "green" },
-      { icon: "dollar", value: "45M", label: "Revenue", delta: "+18%", accent: "purple" },
-      { icon: "barChart2", value: "18", label: "Sales", delta: "+3", accent: "teal" },
+      {
+        icon: "users",
+        value: "247",
+        label: "Clients",
+        delta: "+12%",
+        accent: "blue",
+      },
+      {
+        icon: "trendingUp",
+        value: "23%",
+        label: "Conversion",
+        delta: "+5%",
+        accent: "green",
+      },
+      {
+        icon: "dollar",
+        value: "45M",
+        label: "Revenue",
+        delta: "+18%",
+        accent: "purple",
+      },
+      {
+        icon: "barChart2",
+        value: "18",
+        label: "Sales",
+        delta: "+3",
+        accent: "teal",
+      },
     ],
     facts: [
       "See how many clients each manager is handling — live",
@@ -193,7 +221,8 @@ const en: typeof uz = {
     },
   },
   audit: {
-    title: "A free 30-minute sales audit — we uncover the hidden losses in your business",
+    title:
+      "A free 30-minute sales audit — we uncover the hidden losses in your business",
     subtitle: "During the diagnostic, you'll find out exactly:",
     points: [
       "The 3 biggest weak points in your sales system",

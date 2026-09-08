@@ -19,8 +19,11 @@ type Status = "idle" | "submitting" | "success" | "error";
 export function ContactForm() {
   const { t, locale } = useTranslation();
   const [values, setValues] = useState<ContactFormValues>(initialValues);
-  const [errors, setErrors] = useState<Partial<Record<"name" | "phone" | "company", string>>>({});
+  const [errors, setErrors] = useState<
+    Partial<Record<"name" | "phone" | "company", string>>
+  >({});
   const [status, setStatus] = useState<Status>("idle");
+  const [serverError, setServerError] = useState<string>("");
 
   const handleChange =
     (field: keyof ContactFormValues) =>
@@ -36,6 +39,7 @@ export function ContactForm() {
     if (!validation.valid) return;
 
     setStatus("submitting");
+    setServerError("");
     try {
       const response = await fetch("/api/contact", {
         method: "POST",
@@ -49,11 +53,16 @@ export function ContactForm() {
         }),
       });
 
-      if (!response.ok) throw new Error("request failed");
+      const data = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(data?.message || "request failed");
+      }
 
       setStatus("success");
       setValues(initialValues);
-    } catch {
+    } catch (error) {
+      console.error("Contact submit failed:", error);
+      setServerError(error instanceof Error ? error.message : "Unknown error");
       setStatus("error");
     }
   };
@@ -73,7 +82,10 @@ export function ContactForm() {
       />
 
       <div>
-        <label htmlFor="name" className="mb-1.5 block text-[13px] font-medium text-ink-secondary">
+        <label
+          htmlFor="name"
+          className="mb-1.5 block text-[13px] font-medium text-ink-secondary"
+        >
           {t.contact.form.name}
         </label>
         <input
@@ -85,11 +97,16 @@ export function ContactForm() {
           maxLength={80}
           className="w-full rounded-xl border border-border-medium bg-white/[0.04] px-4 py-3 text-[14px] text-ink-primary placeholder:text-ink-tertiary focus:border-brand-blue"
         />
-        {errors.name && <p className="mt-1 text-[12px] text-brand-red">{errors.name}</p>}
+        {errors.name && (
+          <p className="mt-1 text-[12px] text-brand-red">{errors.name}</p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="phone" className="mb-1.5 block text-[13px] font-medium text-ink-secondary">
+        <label
+          htmlFor="phone"
+          className="mb-1.5 block text-[13px] font-medium text-ink-secondary"
+        >
           {t.contact.form.phone}
         </label>
         <input
@@ -101,11 +118,16 @@ export function ContactForm() {
           maxLength={20}
           className="w-full rounded-xl border border-border-medium bg-white/[0.04] px-4 py-3 text-[14px] text-ink-primary placeholder:text-ink-tertiary focus:border-brand-blue"
         />
-        {errors.phone && <p className="mt-1 text-[12px] text-brand-red">{errors.phone}</p>}
+        {errors.phone && (
+          <p className="mt-1 text-[12px] text-brand-red">{errors.phone}</p>
+        )}
       </div>
 
       <div>
-        <label htmlFor="company" className="mb-1.5 block text-[13px] font-medium text-ink-secondary">
+        <label
+          htmlFor="company"
+          className="mb-1.5 block text-[13px] font-medium text-ink-secondary"
+        >
           {t.contact.form.company}
         </label>
         <input
@@ -117,7 +139,9 @@ export function ContactForm() {
           maxLength={120}
           className="w-full rounded-xl border border-border-medium bg-white/[0.04] px-4 py-3 text-[14px] text-ink-primary placeholder:text-ink-tertiary focus:border-brand-blue"
         />
-        {errors.company && <p className="mt-1 text-[12px] text-brand-red">{errors.company}</p>}
+        {errors.company && (
+          <p className="mt-1 text-[12px] text-brand-red">{errors.company}</p>
+        )}
       </div>
 
       <Button
@@ -127,7 +151,9 @@ export function ContactForm() {
         isLoading={status === "submitting"}
         icon={<Send className="h-4 w-4" />}
       >
-        {status === "submitting" ? t.contact.form.submitting : t.contact.form.submit}
+        {status === "submitting"
+          ? t.contact.form.submitting
+          : t.contact.form.submit}
       </Button>
 
       {status === "success" && (
@@ -139,7 +165,7 @@ export function ContactForm() {
       {status === "error" && (
         <p className="flex items-center gap-2 text-[13px] font-medium text-brand-red">
           <AlertCircle className="h-4 w-4" />
-          {t.contact.form.error}
+          {serverError || t.contact.form.error}
         </p>
       )}
     </form>

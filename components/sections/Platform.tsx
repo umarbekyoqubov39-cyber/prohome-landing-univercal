@@ -19,7 +19,10 @@ export function Platform() {
     <section id="solution" className="py-16 md:py-24">
       <div className="mx-auto max-w-content px-5 md:px-8">
         <AnimatedSection>
-          <SectionHeading title={t.platform.title} subtitle={t.platform.subtitle} />
+          <SectionHeading
+            title={t.platform.title}
+            subtitle={t.platform.subtitle}
+          />
         </AnimatedSection>
 
         <div className="mt-12 grid grid-cols-1 gap-5 lg:grid-cols-3">
@@ -27,7 +30,10 @@ export function Platform() {
             const Icon = getIcon(mod.icon);
             return (
               <AnimatedSection key={mod.title} delay={i * 100}>
-                <div className="h-full rounded-2xl border border-border-subtle bg-base-800/60 p-6">
+                <div
+                  className="h-full rounded-2xl border border-border-subtle bg-base-800/60 p-6 cursor-pointer transition-all hover:bg-base-800/80 hover:border-border-default"
+                  onClick={() => mod.url && window.open(mod.url, "_blank")}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.05]">
                       <Icon className="h-5 w-5 text-ink-primary" />
@@ -38,10 +44,15 @@ export function Platform() {
                       {mod.badge}
                     </span>
                   </div>
-                  <h3 className="mt-4 text-[17px] font-bold text-ink-primary">{mod.title}</h3>
+                  <h3 className="mt-4 text-[17px] font-bold text-ink-primary">
+                    {mod.title}
+                  </h3>
                   <ul className="mt-4 space-y-2.5">
                     {mod.points.map((point) => (
-                      <li key={point} className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink-secondary">
+                      <li
+                        key={point}
+                        className="flex gap-2.5 text-[13.5px] leading-relaxed text-ink-secondary"
+                      >
                         <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brand-green" />
                         {point}
                       </li>
@@ -67,7 +78,9 @@ export function Platform() {
                   <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/[0.06] text-[12px] font-bold text-ink-primary">
                     {i + 1}
                   </span>
-                  <p className="text-[13.5px] leading-relaxed text-ink-secondary">{step}</p>
+                  <p className="text-[13.5px] leading-relaxed text-ink-secondary">
+                    {step}
+                  </p>
                 </div>
               ))}
             </div>

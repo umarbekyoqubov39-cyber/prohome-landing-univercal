@@ -16,7 +16,8 @@ const uz = {
     cta: "Bepul sotov diagnostikasi",
   },
   problems: {
-    title: "Yangi qurilish loyihalarida tizimsiz sotuvning eng asosiy muammolari",
+    title:
+      "Yangi qurilish loyihalarida tizimsiz sotuvning eng asosiy muammolari",
     subtitle:
       "Agar sotuv jarayoni tizimlashtirilmagan bo'lsa, quyidagi muammolar deyarli har bir loyihada uchraydi:",
     cards: [
@@ -83,8 +84,10 @@ const uz = {
       "Bu muammolar birdan kelmaydi — siz sezmaguningizcha biznesingizni sekin yemiradi.",
   },
   calculator: {
-    title: "Konversiyadagi kichik pasayish sizga qancha zarar keltirishini bilasizmi?",
-    example: "Masalan: 1 ta xonadon o'rtacha 600 mln so'm. Agar konversiya atigi 5% past bo'lsa:",
+    title:
+      "Konversiyadagi kichik pasayish sizga qancha zarar keltirishini bilasizmi?",
+    example:
+      "Masalan: 1 ta xonadon o'rtacha 600 mln so'm. Agar konversiya atigi 5% past bo'lsa:",
     point1: "Har 100 ta lid ichida 5 ta sotuv yo'qoladi.",
     point2: "Bu esa 5 × 600 mln = 3 milliard so'm aylanma yo'qotish degani.",
     question: "Savol: bu yo'qotishni tizim orqali oldini olishni xohlaysizmi?",
@@ -111,7 +114,8 @@ const uz = {
       {
         icon: "users",
         badge: "CRM",
-        title: "PRO HOME CRM",
+        title: "Kotibam CRM",
+        url: "https://kotibam.uz/",
         points: [
           "Har bir lidni yo'qolmasdan tizimda saqlash va nazorat qilish",
           "Call center bilan integratsiya va barcha qo'ng'iroqlarni monitoring qilish",
@@ -153,10 +157,34 @@ const uz = {
     browserUrl: "app.prohome.uz/dashboard",
     chartTitle: "Oylik sotuv dinamikasi",
     metrics: [
-      { icon: "users", value: "247", label: "Mijozlar", delta: "+12%", accent: "blue" },
-      { icon: "trendingUp", value: "23%", label: "Konversiya", delta: "+5%", accent: "green" },
-      { icon: "dollar", value: "45M", label: "Tushum", delta: "+18%", accent: "purple" },
-      { icon: "barChart2", value: "18", label: "Sotuv", delta: "+3", accent: "teal" },
+      {
+        icon: "users",
+        value: "247",
+        label: "Mijozlar",
+        delta: "+12%",
+        accent: "blue",
+      },
+      {
+        icon: "trendingUp",
+        value: "23%",
+        label: "Konversiya",
+        delta: "+5%",
+        accent: "green",
+      },
+      {
+        icon: "dollar",
+        value: "45M",
+        label: "Tushum",
+        delta: "+18%",
+        accent: "purple",
+      },
+      {
+        icon: "barChart2",
+        value: "18",
+        label: "Sotuv",
+        delta: "+3",
+        accent: "teal",
+      },
     ],
     facts: [
       "Qaysi menejer nechta mijoz bilan ishlayapti — jonli ko'rinadi",
@@ -167,7 +195,8 @@ const uz = {
       "Sotilmagan xonadonlar summasi — bir qarashda ko'rinadi",
       "O'tgan oy bilan natija taqqoslash — o'sish dinamikasi bilan",
     ],
-    footer: "Rahbar taxmin bilan emas — real raqamlar asosida qaror qabul qiladi.",
+    footer:
+      "Rahbar taxmin bilan emas — real raqamlar asosida qaror qabul qiladi.",
   },
   reputation: {
     title: "Reputatsiya — bu eng qimmat biznes aktivingiz",
@@ -191,7 +220,8 @@ const uz = {
     },
   },
   audit: {
-    title: "30 daqiqalik bepul sotuv auditi — biznesingizdagi yashirin yo'qotishlarni aniqlaymiz",
+    title:
+      "30 daqiqalik bepul sotuv auditi — biznesingizdagi yashirin yo'qotishlarni aniqlaymiz",
     subtitle: "Diagnostika davomida siz quyidagilarni aniq bilib olasiz:",
     points: [
       "Sotuv tizimidagi 3 ta asosiy zaif nuqta",
@@ -226,7 +256,8 @@ const uz = {
       submit: "Yuborish",
       submitting: "Yuborilmoqda...",
       success: "Arizangiz qabul qilindi! Tez orada siz bilan bog'lanamiz.",
-      error: "Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring yoki qo'ng'iroq qiling.",
+      error:
+        "Xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring yoki qo'ng'iroq qiling.",
     },
   },
   footer: {
