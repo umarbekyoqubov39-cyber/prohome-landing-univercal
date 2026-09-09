@@ -5,7 +5,7 @@ import { useTranslation } from "@/lib/i18n/useTranslation";
 
 export function Footer() {
   const { t } = useTranslation();
-  const year = new Date().getFullYear();
+  const year = 2025;
 
   return (
     <footer className="border-t border-border-subtle py-8">

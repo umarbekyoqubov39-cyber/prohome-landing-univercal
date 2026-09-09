@@ -131,6 +131,7 @@ const en: typeof uz = {
         icon: "trendingUp",
         badge: "MARKETING",
         title: "Marketing + Lead Generation",
+        url: "https://www.zamon-agency.uz/",
         points: [
           "A systematic traffic model that ensures a steady flow of clients",
           "Clear visibility into the cost of every lead and ad performance",

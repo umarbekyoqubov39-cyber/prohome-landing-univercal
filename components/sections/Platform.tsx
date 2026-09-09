@@ -32,7 +32,10 @@ export function Platform() {
               <AnimatedSection key={mod.title} delay={i * 100}>
                 <div
                   className="h-full rounded-2xl border border-border-subtle bg-base-800/60 p-6 cursor-pointer transition-all hover:bg-base-800/80 hover:border-border-default"
-                  onClick={() => mod.url && window.open(mod.url, "_blank")}
+                  onClick={() =>
+                    mod.url &&
+                    window.open(mod.url, "_blank", "noopener,noreferrer")
+                  }
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/[0.05]">
