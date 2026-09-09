@@ -12,7 +12,7 @@ const FADE_DURATION_MS = 500;
  * Vaqt tugagach yumshoq fade-out bilan yo'qoladi va asosiy kontent ochiladi.
  */
 export function Loader() {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {

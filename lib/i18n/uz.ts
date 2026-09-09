@@ -129,6 +129,7 @@ const uz = {
         icon: "trendingUp",
         badge: "MARKETING",
         title: "Marketing + Lead Generation",
+        url: "https://www.zamon-agency.uz/",
         points: [
           "Barqaror mijoz oqimini ta'minlaydigan tizimli trafik modeli",
           "Har bir lid narxini va reklama samaradorligini aniq ko'rsatish",
@@ -250,7 +251,9 @@ const uz = {
       name: "Ismingiz",
       namePlaceholder: "Abdullayev Sardor",
       phone: "Telefon raqamingiz",
-      phonePlaceholder: "+998 90 123 45 67",
+      phonePlaceholder: "90 123 45 67",
+      email: "Email manzilingiz",
+      emailPlaceholder: "sardor@example.com",
       company: "Kompaniya nomi",
       companyPlaceholder: "PRO HOME",
       submit: "Yuborish",

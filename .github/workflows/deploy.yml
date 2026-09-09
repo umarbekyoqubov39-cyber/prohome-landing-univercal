@@ -1,0 +1,109 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: cicd-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1) CI — lint + production build tekshiruvi (har push va PR da)
+  # ---------------------------------------------------------------------------
+  ci:
+    name: Lint & Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_TELEMETRY_DISABLED: "1"
+          # Build vaqtida kerak bo'lsa (yo'q bo'lsa ham build o'tadi):
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+  # ---------------------------------------------------------------------------
+  # 2) CD — serverga SSH orqali deploy (faqat main branch push da)
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Deploy to server
+    needs: ci
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          port: ${{ secrets.SERVER_PORT }}
+          username: ${{ vars.SERVER_USER || 'root' }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
+          script_stop: true
+          command_timeout: 15m
+          script: |
+            set -euo pipefail
+
+            # --- Sozlamalar ---------------------------------------------------
+            GH_TOKEN="${{ secrets.GH_TOKEN }}"
+            REPO="github.com/umarbekyoqubov39-cyber/prohome-landing-univercal.git"
+            APP_DIR="${{ vars.APP_DIR || '/var/www/prohome-landing' }}"
+            APP_PORT="${{ vars.APP_PORT || '3000' }}"
+            APP_NAME="prohome-landing"
+
+            # --- Node/npm ni PATH ga qo'shish (nvm bo'lsa) -------------------
+            export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+            [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+            export PATH="$PATH:/usr/local/bin:/usr/bin"
+            command -v node >/dev/null || { echo "❌ Node topilmadi"; exit 1; }
+            command -v pm2  >/dev/null || npm install -g pm2
+
+            AUTH_REPO="https://x-access-token:${GH_TOKEN}@${REPO}"
+
+            # --- Birinchi marta: clone; keyin: hard reset -------------------
+            if [ ! -d "$APP_DIR/.git" ]; then
+              mkdir -p "$(dirname "$APP_DIR")"
+              git clone "$AUTH_REPO" "$APP_DIR"
+              cd "$APP_DIR"
+            else
+              cd "$APP_DIR"
+              git remote set-url origin "$AUTH_REPO"
+              git fetch --prune origin
+              git reset --hard origin/main
+              git clean -fd
+            fi
+
+            # Token repo config ichida saqlanib qolmasin
+            git remote set-url origin "https://${REPO}"
+
+            # --- Build & restart -------------------------------------------
+            npm ci
+            npm run build
+
+            export PORT="$APP_PORT"
+            export NODE_ENV=production
+            pm2 restart "$APP_NAME" --update-env \
+              || pm2 start npm --name "$APP_NAME" --update-env -- run start
+            pm2 save
+
+            echo "✅ Deploy tugadi: $APP_NAME (port $APP_PORT)"

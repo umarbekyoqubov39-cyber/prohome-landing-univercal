@@ -10,17 +10,34 @@ import type { ContactFormValues } from "@/types";
 const initialValues: ContactFormValues = {
   name: "",
   phone: "",
+  email: "",
   company: "",
   website: "",
 };
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+/** Faqat raqamlarni qoldiradi va O'zbekiston raqamining 9 ta xonasi bilan cheklaydi. */
+function toPhoneDigits(value: string): string {
+  return value.replace(/\D/g, "").slice(0, 9);
+}
+
+/** "901234567" -> "90 123 45 67" ko'rinishida chiroyli ko'rsatadi. */
+function formatUzPhone(digits: string): string {
+  const p = [
+    digits.slice(0, 2),
+    digits.slice(2, 5),
+    digits.slice(5, 7),
+    digits.slice(7, 9),
+  ].filter(Boolean);
+  return p.join(" ");
+}
+
 export function ContactForm() {
   const { t, locale } = useTranslation();
   const [values, setValues] = useState<ContactFormValues>(initialValues);
   const [errors, setErrors] = useState<
-    Partial<Record<"name" | "phone" | "company", string>>
+    Partial<Record<"name" | "phone" | "email" | "company", string>>
   >({});
   const [status, setStatus] = useState<Status>("idle");
   const [serverError, setServerError] = useState<string>("");
@@ -30,6 +47,11 @@ export function ContactForm() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setValues((prev) => ({ ...prev, [field]: e.target.value }));
     };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = toPhoneDigits(e.target.value);
+    setValues((prev) => ({ ...prev, phone: digits }));
+  };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,7 +68,8 @@ export function ContactForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: sanitizeText(values.name),
-          phone: sanitizeText(values.phone),
+          phone: `+998${values.phone}`,
+          email: sanitizeText(values.email),
           company: sanitizeText(values.company),
           website: values.website, // honeypot
           locale,
@@ -58,6 +81,7 @@ export function ContactForm() {
         throw new Error(data?.message || "request failed");
       }
 
+      console.info("[contact] Yuborildi:", data?.delivery ?? data);
       setStatus("success");
       setValues(initialValues);
     } catch (error) {
@@ -109,17 +133,46 @@ export function ContactForm() {
         >
           {t.contact.form.phone}
         </label>
-        <input
-          id="phone"
-          type="tel"
-          value={values.phone}
-          onChange={handleChange("phone")}
-          placeholder={t.contact.form.phonePlaceholder}
-          maxLength={20}
-          className="w-full rounded-xl border border-border-medium bg-white/[0.04] px-4 py-3 text-[14px] text-ink-primary placeholder:text-ink-tertiary focus:border-brand-blue"
-        />
+        <div className="flex items-stretch rounded-xl border border-border-medium bg-white/[0.04] focus-within:border-brand-blue">
+          <span className="flex select-none items-center gap-1.5 border-r border-border-medium px-3 text-[14px] font-medium text-ink-secondary">
+            <span aria-hidden="true">🇺🇿</span>
+            +998
+          </span>
+          <input
+            id="phone"
+            type="tel"
+            inputMode="numeric"
+            autoComplete="tel-national"
+            value={formatUzPhone(values.phone)}
+            onChange={handlePhoneChange}
+            placeholder={t.contact.form.phonePlaceholder}
+            className="w-full rounded-r-xl bg-transparent px-4 py-3 text-[14px] text-ink-primary placeholder:text-ink-tertiary focus:outline-none"
+          />
+        </div>
         {errors.phone && (
           <p className="mt-1 text-[12px] text-brand-red">{errors.phone}</p>
+        )}
+      </div>
+
+      <div>
+        <label
+          htmlFor="email"
+          className="mb-1.5 block text-[13px] font-medium text-ink-secondary"
+        >
+          {t.contact.form.email}
+        </label>
+        <input
+          id="email"
+          type="email"
+          required
+          value={values.email}
+          onChange={handleChange("email")}
+          placeholder={t.contact.form.emailPlaceholder}
+          maxLength={254}
+          className="w-full rounded-xl border border-border-medium bg-white/[0.04] px-4 py-3 text-[14px] text-ink-primary placeholder:text-ink-tertiary focus:border-brand-blue"
+        />
+        {errors.email && (
+          <p className="mt-1 text-[12px] text-brand-red">{errors.email}</p>
         )}
       </div>
 
@@ -133,6 +186,7 @@ export function ContactForm() {
         <input
           id="company"
           type="text"
+          required
           value={values.company}
           onChange={handleChange("company")}
           placeholder={t.contact.form.companyPlaceholder}

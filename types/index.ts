@@ -37,7 +37,9 @@ export interface DashboardMetric {
 
 export interface ContactFormValues {
   name: string;
+  /** Faqat O'zbekiston raqamining lokal qismi: 9 ta raqam (masalan "901234567"). */
   phone: string;
+  email: string;
   company: string;
   /** Honeypot field: bots fill it, real users never see it. */
   website: string;

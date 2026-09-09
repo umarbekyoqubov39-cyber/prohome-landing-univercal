@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateContactForm, sanitizeText } from "@/utils/validation";
+import {
+  validateContactForm,
+  sanitizeText,
+  normalizeUzPhone,
+} from "@/utils/validation";
 import { isRateLimited } from "@/utils/rateLimit";
 import { sendLeadToTelegram } from "@/utils/telegram";
+import { sendLeadToBackend } from "@/utils/backend";
 import type { Locale } from "@/types";
 
 export const runtime = "nodejs";
@@ -40,7 +45,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { name, phone, company, website, locale } = body as Record<
+    const { name, phone, email, company, website, locale } = body as Record<
       string,
       unknown
     >;
@@ -59,6 +64,7 @@ export async function POST(request: NextRequest) {
       {
         name: typeof name === "string" ? name : "",
         phone: typeof phone === "string" ? phone : "",
+        email: typeof email === "string" ? email : "",
         company: typeof company === "string" ? company : "",
       },
       safeLocale,
@@ -71,24 +77,60 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    await sendLeadToTelegram({
+    const lead = {
       name: sanitizeText(name as string),
-      phone: sanitizeText(phone as string),
+      phone: normalizeUzPhone(phone as string),
+      email: sanitizeText(email as string),
       company: sanitizeText((company as string) ?? ""),
-      ip,
-      userAgent,
-      locale: safeLocale,
-      source,
-    });
+    };
 
-    return NextResponse.json({ success: true, message: "OK" });
+    console.info(
+      `[/api/contact] Yangi lid qabul qilindi: ${lead.name} / ${lead.phone} / ${lead.email} / ${lead.company} (ip=${ip})`,
+    );
+
+    // Asosiy manzil: PRO HOME backend CRM. Muvaffaqiyatsiz bo'lsa so'rov ham xato beradi.
+    const backend = await sendLeadToBackend(lead);
+    console.info(
+      `[/api/contact] Backend CRM javobi: ${backend.status} ${backend.ok ? "OK" : "XATO"} (${backend.endpoint})`,
+    );
+
+    // Telegram bildirishnomasi — qo'shimcha, xato bo'lsa ham so'rovni to'xtatmaydi.
+    let telegramOk = false;
+    try {
+      await sendLeadToTelegram({
+        ...lead,
+        ip,
+        userAgent,
+        locale: safeLocale,
+        source,
+      });
+      telegramOk = true;
+      console.info("[/api/contact] Telegram bildirishnomasi yuborildi");
+    } catch (telegramError) {
+      console.error(
+        "[/api/contact] Telegram bildirishnomasi yuborilmadi:",
+        telegramError,
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: "OK",
+      delivery: {
+        backend: { ok: backend.ok, status: backend.status },
+        telegram: { ok: telegramOk },
+      },
+    });
   } catch (error) {
-    console.error("[/api/contact]", error);
+    console.error("[/api/contact] So'rov muvaffaqiyatsiz tugadi:", error);
     const message =
       error instanceof Error && error.message
         ? error.message
         : "Internal error";
 
-    return NextResponse.json({ success: false, message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, message, delivery: { backend: { ok: false } } },
+      { status: 502 },
+    );
   }
 }

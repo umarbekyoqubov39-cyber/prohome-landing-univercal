@@ -3,6 +3,7 @@ import "server-only";
 interface TelegramLead {
   name: string;
   phone: string;
+  email: string;
   company: string;
   ip?: string;
   userAgent?: string;
@@ -77,6 +78,7 @@ export async function sendLeadToTelegram(lead: TelegramLead): Promise<void> {
     "",
     `👤 *Ism:* ${escapeMarkdownV2(lead.name)}`,
     `📞 *Telefon:* ${escapeMarkdownV2(lead.phone)}`,
+    lead.email ? `✉️ *Email:* ${escapeMarkdownV2(lead.email)}` : null,
     lead.company ? `🏢 *Kompaniya:* ${escapeMarkdownV2(lead.company)}` : null,
     lead.ip ? `🌐 *IP:* ${escapeMarkdownV2(lead.ip)}` : null,
     lead.locale ? `🌍 *Locale:* ${escapeMarkdownV2(lead.locale)}` : null,
